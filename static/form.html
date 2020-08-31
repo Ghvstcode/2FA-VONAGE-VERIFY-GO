@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        input[type="tel"] {
+            border: 1px solid #ddd;
+            padding: 4px 8px;
+        }
+        input[type="tel"]:focus {
+            border: 1px solid #000;
+        }
+
+        input[type="submit"] {
+            font-weight: bold;
+            padding: 4px 8px;
+            border:1px solid #000;
+            background: #3b5998;
+            color:#fff;
+        }
+
+        form {
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        /*div{*/
+        /*    border: 20px;*/
+        /*    width: 200px;*/
+        /*    padding: 25px;*/
+        /*}*/
+    </style>
+    <meta charset="UTF-8" />
+</head>
+<body>
+<div>
+    <form method="POST" action="/confirm">
+        <h2>Confirm Phone Number</h2>
+        <label for="phonenum">Please Input the confirmation code sent to your phone:</label><br/>
+        <input id="phonenum" name="confirmation" type="tel" required value="" >
+        <input name="phone" type="hidden" value="{{ .Phone }}">
+        <input name="requestId" type="hidden" value="{{ .Id }}">
+        <input type="submit" value="Submit">
+    </form>
+</div>
+</body>
+</html>
