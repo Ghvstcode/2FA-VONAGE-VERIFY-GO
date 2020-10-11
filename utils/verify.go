@@ -2,12 +2,10 @@ package verify
 
 import (
 	"log"
-	"net/http"
 	"os"
-	//"sync"
 
 	"github.com/joho/godotenv"
-	"github.com/nexmo-community/nexmo-go"
+	"github.com/vonage/vonage-go-sdk"
 )
 
 func init() {
@@ -16,33 +14,33 @@ func init() {
 		log.Print("No .env file found")
 	}
 }
-func createClient() *nexmo.Client{
+func createClient() *vonage.VerifyClient{
 	Key, _ := os.LookupEnv("API_KEY")
 	Secret, _ := os.LookupEnv("API_SECRET")
-	auth := nexmo.NewAuthSet()
-	auth.SetAPISecret(Key, Secret)
-	client := nexmo.NewClient(http.DefaultClient, auth)
+
+	auth := vonage.CreateAuthFromKeySecret(Key, Secret)
+
+	client := vonage.NewVerifyClient(auth)
+
 	return client
 }
 
 func VerStart(phoneNumber string) string{
 	client := createClient()
-	verification, _, err := client.Verify.Start(nexmo.StartVerificationRequest{
-		Number: phoneNumber,
-		Brand:  "Go-Tut 2FA",
+
+	verification, _, err := client.Request(phoneNumber, "Go-Tut 2FA", vonage.VerifyOpts{
+		CodeLength: 6,
 	})
+
 	if err != nil {
 		log.Fatal(err)
 	}
-	return verification.RequestID
+	return verification.RequestId
 }
 
 func VerCheck(reqId, code string) string{
 	client := createClient()
-	response, _, err := client.Verify.Check(nexmo.CheckVerificationRequest{
-		RequestID: reqId,
-		Code:      code,
-	})
+	response, _, err := client.Check(reqId, code)
 	if err != nil {
 		log.Fatal(err)
 	}
