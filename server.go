@@ -38,12 +38,7 @@ func confirmHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	Id := r.FormValue("requestId")
 	phone := r.FormValue("phone")
-
-	codeChan := make(chan string)
-	go func() {
-		codeChan <- r.FormValue("confirmation")
-	}()
-	confirmation := <- codeChan
+	confirmation := r.FormValue("confirmation")
 
 	response := verify.VerCheck(Id, confirmation)
 	if response != "0" {
